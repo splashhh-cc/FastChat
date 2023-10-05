@@ -88,7 +88,9 @@ async def fetch_remote(url, pload=None, name=None):
 class AppSettings(BaseSettings):
     # The address of the model controller.
     controller_address: str = "http://localhost:21001"
-    api_keys: Optional[List[str]] = None
+    # read list from the environment variable FC_API_KEYS
+    api_keys_str = os.getenv("FC_API_KEYS", None)
+    api_keys = api_keys_str.split(",") if api_keys_str else None
 
 
 app_settings = AppSettings()
