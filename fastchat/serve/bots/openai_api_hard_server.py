@@ -89,9 +89,9 @@ class AppSettings(BaseSettings):
     # The address of the model controller.
     controller_address: str = "http://localhost:21001"
     # read list from the environment variable FC_API_KEYS
-    api_keys_str: str = os.getenv("FC_API_KEYS", None)
+    api_keys_str: str = os.getenv("FC_API_KEYS", "")
     # split the string into an optional list of keys
-    api_keys: Optional[List[str]] = api_keys_str.split(",") if api_keys_str else None
+    api_keys: List[str] = api_keys_str.split(",") if api_keys_str else []
 
 
 app_settings = AppSettings()
@@ -109,7 +109,7 @@ async def check_api_key(
     logger.warning(f"if app_settings.api_keys: {app_settings.api_keys}")
     # print all fileds for the app_settings object
     logger.warning(f"app_settings: {app_settings}")
-    if app_settings.api_keys:
+    if len(app_settings.api_keys) != 0:
         # print auth nicly formated
         logger.warning(f"auth: {auth}")
 
