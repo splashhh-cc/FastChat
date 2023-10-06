@@ -88,10 +88,8 @@ async def fetch_remote(url, pload=None, name=None):
 class AppSettings(BaseSettings):
     # The address of the model controller.
     controller_address: str = "http://localhost:21001"
-    # read list from the environment variable FC_API_KEYS
-    api_keys_str: str = os.getenv("FC_API_KEYS", "")
     # split the string into an optional list of keys
-    api_keys: List[str] = api_keys_str.split(",") if api_keys_str else []
+    api_keys: Optional[List[str]] = None
 
 
 app_settings = AppSettings()
@@ -109,13 +107,12 @@ async def check_api_key(
     logger.warning(f"if app_settings.api_keys: {app_settings.api_keys}")
     # print all fileds for the app_settings object
     logger.warning(f"app_settings: {app_settings}")
-    api_keys: List[str] = app_settings.api_keys_str.split(",") if app_settings.api_keys_str else []
 
-    if api_keys:
+    if app_settings.api_keys:
         # print auth nicly formated
         logger.warning(f"auth: {auth}")
 
-        if auth is None or (token := auth.credentials) not in api_keys:
+        if auth is None or (token := auth.credentials) not in app_settings.api_keys:
             raise HTTPException(
                 status_code=401,
                 detail={
