@@ -89,13 +89,15 @@ class AppSettings(BaseSettings):
     # The address of the model controller.
     controller_address: str = "http://localhost:21001"
     # read list from the environment variable FC_API_KEYS
-    api_keys_str = os.getenv("FC_API_KEYS", None)
-    # print the number of keys in api_keys_str
-    logger.info(f" Got FC_API_KEYS: {api_keys_str}")
-    api_keys = api_keys_str.split(",") if api_keys_str else None
+    api_keys_str: str = os.getenv("FC_API_KEYS", None)
+    # split the string into an optional list of keys
+    api_keys: Optional[List[str]] = api_keys_str.split(",") if api_keys_str else None
 
 
 app_settings = AppSettings()
+logger.warning(f"api_keys: {app_settings.api_keys}")
+# print the number of api keys
+logger.warning(f"number of api_keys: {len(app_settings.api_keys) if app_settings.api_keys else 0}")
 app = fastapi.FastAPI()
 headers = {"User-Agent": "FastChat API Server"}
 get_bearer_token = HTTPBearer(auto_error=False)
