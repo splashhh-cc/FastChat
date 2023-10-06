@@ -90,6 +90,8 @@ class AppSettings(BaseSettings):
     controller_address: str = "http://localhost:21001"
     # read list from the environment variable FC_API_KEYS
     api_keys_str = os.getenv("FC_API_KEYS", None)
+    # print the number of keys in api_keys_str
+    logger.info(f" Got FC_API_KEYS: {api_keys_str}")
     api_keys = api_keys_str.split(",") if api_keys_str else None
 
 
