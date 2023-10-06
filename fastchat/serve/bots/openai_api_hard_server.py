@@ -115,7 +115,7 @@ async def check_api_key(
         # print auth nicly formated
         logger.warning(f"auth: {auth}")
 
-        if auth is None or (token := auth.credentials) not in app_settings.api_keys:
+        if auth is None or (token := auth.credentials) not in api_keys:
             raise HTTPException(
                 status_code=401,
                 detail={
