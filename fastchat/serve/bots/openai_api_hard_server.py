@@ -96,8 +96,8 @@ class AppSettings(BaseSettings):
 
 app_settings = AppSettings()
 logger.warning(f"api_keys: {app_settings.api_keys}")
-# print the number of api keys
 logger.warning(f"number of api_keys: {len(app_settings.api_keys) if app_settings.api_keys else 0}")
+
 app = fastapi.FastAPI()
 headers = {"User-Agent": "FastChat API Server"}
 get_bearer_token = HTTPBearer(auto_error=False)
@@ -107,6 +107,9 @@ async def check_api_key(
     auth: Optional[HTTPAuthorizationCredentials] = Depends(get_bearer_token),
 ) -> str:
     if app_settings.api_keys:
+        # print auth nicly formated
+        logger.warning(f"auth: {auth}")
+
         if auth is None or (token := auth.credentials) not in app_settings.api_keys:
             raise HTTPException(
                 status_code=401,
