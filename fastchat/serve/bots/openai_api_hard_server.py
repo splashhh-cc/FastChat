@@ -107,6 +107,8 @@ async def check_api_key(
     auth: Optional[HTTPAuthorizationCredentials] = Depends(get_bearer_token),
 ) -> str:
     logger.warning(f"if app_settings.api_keys: {app_settings.api_keys}")
+    # print all fileds for the app_settings object
+    logger.warning(f"app_settings: {app_settings}")
     if app_settings.api_keys:
         # print auth nicly formated
         logger.warning(f"auth: {auth}")
