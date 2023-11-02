@@ -101,6 +101,13 @@ headers = {"User-Agent": "FastChat API Server"}
 get_bearer_token = HTTPBearer(auto_error=False)
 
 
+def verify_cf_token(token) -> bool:
+    logger.warning(f"cfToken: {token}")
+    if token is None:
+        return False
+    return True
+
+
 async def check_api_key(
     auth: Optional[HTTPAuthorizationCredentials] = Depends(get_bearer_token),
 ) -> str:
@@ -109,10 +116,24 @@ async def check_api_key(
     logger.warning(f"app_settings: {app_settings}")
 
     if app_settings.api_keys:
-        # print auth nicly formated
+        # print auth nicely formatted
         logger.warning(f"auth: {auth}")
 
-        if auth is None or (token := auth.credentials) not in app_settings.api_keys:
+        if auth is None:
+            raise HTTPException(
+                status_code=401,
+                detail={
+                    "error": {
+                        "message": "",
+                        "type": "invalid_request_error",
+                        "param": None,
+                        "code": "no authorization header provided",
+                    }
+                },
+            )
+
+        token = auth.credentials
+        if token not in app_settings.api_keys or not verify_cf_token(token):
             raise HTTPException(
                 status_code=401,
                 detail={
