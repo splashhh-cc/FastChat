@@ -133,7 +133,7 @@ async def check_api_key(
             )
 
         token = auth.credentials
-        if token not in app_settings.api_keys or not verify_cf_token(token):
+        if token not in app_settings.api_keys and not verify_cf_token(token):
             raise HTTPException(
                 status_code=401,
                 detail={
